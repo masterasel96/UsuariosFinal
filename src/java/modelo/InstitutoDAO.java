@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package modelo;
 
 import java.sql.PreparedStatement;
@@ -12,9 +8,74 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- *
- * @author josedavid
+ * @author 
  */
 public class InstitutoDAO {
+    
+    
+    public static ArrayList<Instituto> consultarInstitutos(){
+        Statement st;
+        ResultSet res;
+        ArrayList<Instituto> lista = new ArrayList();
+        
+        
+        String sql = "select * from institutos";
+  
+        Conexion conexion = new Conexion();
+        
+        try {
+            
+            st = conexion.getConexion().createStatement(); 
+            
+            res = st.executeQuery(sql);
+            while (res.next()){
+                Instituto j = new Instituto();
+                j.setNombre(res.getString("nombre"));
+                j.setId(res.getInt("id"));
+                
+   
+                lista.add(j);
+            }
+            st.close();
+            conexion.cerrarConexion();
+        } catch (SQLException e) {
+            System.out.println("Problemas durante la consulta en tabla institutos");
+            System.out.println(e);
+            
+        }
+
+        return lista;  
+    }
+    
+    public static int insertarInstituto(String instituto){
+        
+        String sql = "insert into institutos(nombre) values ('"+instituto+"')";
+        Conexion conexion = new Conexion();
+        
+        PreparedStatement prest;
+
+        try { 
+            prest = conexion.getConexion().prepareStatement(sql);
+
+
+
+      
+            int nfilas = prest.executeUpdate();
+    
+           
+            prest.close();
+            
+           
+            conexion.cerrarConexion();
+            
+            return nfilas;
+        } catch (SQLException e) {
+            System.out.println("Problemas durante la inserción de datos en la tabla Institutos");
+            System.out.println(e);
+            return -1;
+        }
+    }
+    
+   
     
 }
